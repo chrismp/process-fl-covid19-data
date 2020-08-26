@@ -115,33 +115,33 @@ if(args[4]==0){
     dcast(County ~ caseDate)
 
   
-  # Hospitalizations statewide by date
-  hosp <- "hospitalizations-by-date"
-  chartDFs[[hosp]] <- group_by(
-    .data = filter(
-      .data = positives,
-      Hospitalized %in% c("Yes","YES","yes")
-    ),
-    caseDate
-  ) %>%
-    summarise(
-      Hospitalizations = n()
-    )
-  chartDFs[[hosp]][,"Cumulative hospitalizations"] <- cumsum(chartDFs[[hosp]]$Hospitalizations)
+  # # Hospitalizations statewide by date
+  # hosp <- "hospitalizations-by-date"
+  # chartDFs[[hosp]] <- group_by(
+  #   .data = filter(
+  #     .data = positives,
+  #     Hospitalized %in% c("Yes","YES","yes")
+  #   ),
+  #   caseDate
+  # ) %>%
+  #   summarise(
+  #     Hospitalizations = n()
+  #   )
+  # chartDFs[[hosp]][,"Cumulative hospitalizations"] <- cumsum(chartDFs[[hosp]]$Hospitalizations)
   
-  # Add hospitalizations to cumulative cases data frame
-  chartDFs[[cByD]] <- merge(
-    x = chartDFs[[cByD]],
-    y = chartDFs[[hosp]],
-    by = "caseDate",
-    all = T
-  ) %>%
-    mutate(
-      `Cumulative hospitalizations` = na.locf(`Cumulative hospitalizations`)
-    )
-  
-  chartDFs[[cByD]][is.na(chartDFs[[cByD]])] <- 0
-  chartDFs[[cByD]]$`Rest of cases` <- chartDFs[[cByD]]$`Cumulative cases` - chartDFs[[cByD]]$`Cumulative hospitalizations`
+  # # Add hospitalizations to cumulative cases data frame
+  # chartDFs[[cByD]] <- merge(
+  #   x = chartDFs[[cByD]],
+  #   y = chartDFs[[hosp]],
+  #   by = "caseDate",
+  #   all = T
+  # ) %>%
+  #   mutate(
+  #     `Cumulative hospitalizations` = na.locf(`Cumulative hospitalizations`)
+  #   )
+  # 
+  # chartDFs[[cByD]][is.na(chartDFs[[cByD]])] <- 0
+  # chartDFs[[cByD]]$`Rest of cases` <- chartDFs[[cByD]]$`Cumulative cases` - chartDFs[[cByD]]$`Cumulative hospitalizations`
   
   
   # South FL
@@ -191,13 +191,13 @@ if(args[4]==0){
   
   chartDFs[[positiveRateName]]$`Confirmed cases per 100,000 people` <- chartDFs[[positiveRateName]]$`Confirmed cases` / chartDFs[[positiveRateName]]$`2019 population estimate` * 100000
   
-  # Gender
-  chartDFs[["sex"]] <- func.SummCases(
-    group_by(
-      .data = positives,
-      Sex = fct_explicit_na(Gender, na_level = "Unknown")
-    ) 
-  )
+  # # Gender
+  # chartDFs[["sex"]] <- func.SummCases(
+  #   group_by(
+  #     .data = positives,
+  #     Sex = fct_explicit_na(Gender, na_level = "Unknown")
+  #   ) 
+  # )
   
   # Age group
   positives$`Age group` <- ifelse(
@@ -275,13 +275,13 @@ if(args[4]==0){
       Cases = n()
     )
   
-  # Travel related
-  chartDFs[["travel-related"]] <- func.SummCases(
-    group_by(
-      .data = positives,
-      Travel_related
-    )
-  )
+  # # Travel related
+  # chartDFs[["travel-related"]] <- func.SummCases(
+  #   group_by(
+  #     .data = positives,
+  #     Travel_related
+  #   )
+  # )
   
   
   # Current deaths, resident v non-resident
