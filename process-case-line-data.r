@@ -42,8 +42,14 @@ func.SummCases <- function(gdf){
 #   stringsAsFactors = F
 # )
 
+caseLineFiles <- list.files(
+  path = args[1],
+  full.names = T
+)
+
+latestFile <- caseLineFiles[length(caseLineFiles)]
 positives <- read.csv(
-  file = args[1],
+  file = latestFile,
   stringsAsFactors = F
 )
 
@@ -79,4 +85,4 @@ dfNames <- c(
 )
 
 processedDataDir <- args[2]
-source("write-files-for-datawrapper-from-loop.r")
+source("write-CSVs-from-loop.r")
