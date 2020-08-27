@@ -69,17 +69,15 @@ positives$caseDate <- format(
 ) 
 
 
-cByD <- "cases-by-date"
-sflC <- "south-fl-cumulative"
-dailyCounties <- "daily-fl-counties"
-sflVFL <- "cases-by-date-SouthFL"
-cnty <- "county"
-# pr <- "counties-positive-cases-rate"
-ag <- "age-group"
-meda <- "median-age-by-case-date"
-cd <- "current-deaths"
-
-dfNames <- c(cByD,sflC,dailyCounties,sflVFL,cnty,ag,meda,cd)
+dfNamesChartIDs <- list(
+  "county" = "Vdnj6",
+  "age-group" = "BSF3m",
+  "south-fl-cumulative" = "aof13",
+  "cases-by-date-SouthFL" = "eXjOw",
+  "cases-by-date" = "C7GGb",
+  "current-deaths" = "Kbjsq",
+  "median-age-by-case-date" = "hMtwa"
+)
 
 processedDataDir <- args[2]
-source("write-datawrapper-files-from-loop.r")
+source("write-files-for-datawrapper-from-loop.r")
