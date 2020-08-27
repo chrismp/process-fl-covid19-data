@@ -86,33 +86,33 @@ if(args[4]==0){
     "%Y-%m-%d"
   ) 
   
-  # statewide cumulative cases by date
-  cByD <- "cases-by-date"
-  chartDFs[[cByD]] <- func.SummCases(
-    group_by(
-      .data = positives,
-      caseDate
-    )
-  )
-  chartDFs[[cByD]][,"Cumulative cases"] <- cumsum(chartDFs[[cByD]]$`Confirmed cases`)
+  # # statewide cumulative cases by date
+  # cByD <- "cases-by-date"
+  # chartDFs[[cByD]] <- func.SummCases(
+  #   group_by(
+  #     .data = positives,
+  #     caseDate
+  #   )
+  # )
+  # chartDFs[[cByD]][,"Cumulative cases"] <- cumsum(chartDFs[[cByD]]$`Confirmed cases`)
   
-  # Cumulative cases in South FL by date
-  sflC <- "south-fl-cumulative"
-  chartDFs[[sflC]] <- filter(positives, SouthFLCounties != "Rest of state") %>%
-    group_by(caseDate, SouthFLCounties) %>% 
-    summarise(`Daily confirmed cases` = n()) %>%
-    dcast(caseDate ~ SouthFLCounties)
-  chartDFs[[sflC]][is.na(chartDFs[[sflC]])] <- 0
-  chartDFs[[sflC]]$`Broward sum cases` <- cumsum(chartDFs[[sflC]]$Broward)
-  chartDFs[[sflC]]$`Miami-Dade sum cases` <- cumsum(chartDFs[[sflC]]$`Miami-Dade`)
-  chartDFs[[sflC]]$`Palm Beach sum cases` <- cumsum(chartDFs[[sflC]]$`Palm Beach`)
+  # # Cumulative cases in South FL by date
+  # sflC <- "south-fl-cumulative"
+  # chartDFs[[sflC]] <- filter(positives, SouthFLCounties != "Rest of state") %>%
+  #   group_by(caseDate, SouthFLCounties) %>% 
+  #   summarise(`Daily confirmed cases` = n()) %>%
+  #   dcast(caseDate ~ SouthFLCounties)
+  # chartDFs[[sflC]][is.na(chartDFs[[sflC]])] <- 0
+  # chartDFs[[sflC]]$`Broward sum cases` <- cumsum(chartDFs[[sflC]]$Broward)
+  # chartDFs[[sflC]]$`Miami-Dade sum cases` <- cumsum(chartDFs[[sflC]]$`Miami-Dade`)
+  # chartDFs[[sflC]]$`Palm Beach sum cases` <- cumsum(chartDFs[[sflC]]$`Palm Beach`)
   
-  # Daily cases in each county
-  dailyCounties <- "daily-fl-counties"
-  chartDFs[[dailyCounties]] <- positives %>%
-    group_by(County,caseDate) %>%
-    summarise(`Daily confirmed cases` = n()) %>%
-    dcast(County ~ caseDate)
+  # # Daily cases in each county
+  # dailyCounties <- "daily-fl-counties"
+  # chartDFs[[dailyCounties]] <- positives %>%
+  #   group_by(County,caseDate) %>%
+  #   summarise(`Daily confirmed cases` = n()) %>%
+  #   dcast(County ~ caseDate)
 
   
   # # Hospitalizations statewide by date
@@ -144,52 +144,52 @@ if(args[4]==0){
   # chartDFs[[cByD]]$`Rest of cases` <- chartDFs[[cByD]]$`Cumulative cases` - chartDFs[[cByD]]$`Cumulative hospitalizations`
   
   
-  # South FL
-  sflVFL <- "cases-by-date-SouthFL"
-  chartDFs[[sflVFL]] <- func.SummCases(
-    group_by(
-      .data = filter(
-        .data = positives,
-        !is.na(caseDate)
-      ),
-      caseDate,
-      SouthFLCounties
-    )
-  ) %>%
-    dcast(SouthFLCounties ~ caseDate)
+  # # South FL
+  # sflVFL <- "cases-by-date-SouthFL"
+  # chartDFs[[sflVFL]] <- func.SummCases(
+  #   group_by(
+  #     .data = filter(
+  #       .data = positives,
+  #       !is.na(caseDate)
+  #     ),
+  #     caseDate,
+  #     SouthFLCounties
+  #   )
+  # ) %>%
+  #   dcast(SouthFLCounties ~ caseDate)
+  # 
+  # chartDFs[[sflVFL]]$Order <- ifelse(
+  #   test = chartDFs[[sflVFL]]$SouthFLCounties == "Rest of state",
+  #   yes = 1,
+  #   no = ifelse(
+  #     test = chartDFs[[sflVFL]]$SouthFLCounties == "Miami-Dade",
+  #     yes = 2,
+  #     no = ifelse(
+  #       test = chartDFs[[sflVFL]]$SouthFLCounties == "Broward",
+  #       yes = 3,
+  #       no = 4
+  #     )
+  #   )
+  # ) 
+  # chartDFs[[sflVFL]] <- chartDFs[[sflVFL]][order(chartDFs[[sflVFL]]$Order),]
   
-  chartDFs[[sflVFL]]$Order <- ifelse(
-    test = chartDFs[[sflVFL]]$SouthFLCounties == "Rest of state",
-    yes = 1,
-    no = ifelse(
-      test = chartDFs[[sflVFL]]$SouthFLCounties == "Miami-Dade",
-      yes = 2,
-      no = ifelse(
-        test = chartDFs[[sflVFL]]$SouthFLCounties == "Broward",
-        yes = 3,
-        no = 4
-      )
-    )
-  ) 
-  chartDFs[[sflVFL]] <- chartDFs[[sflVFL]][order(chartDFs[[sflVFL]]$Order),]
+  # # Cases by county
+  # chartDFs[["county"]] <- func.SummCases(
+  #   group_by(
+  #     .data = positives,
+  #     County 
+  #   )
+  # )
   
-  # Cases by county
-  chartDFs[["county"]] <- func.SummCases(
-    group_by(
-      .data = positives,
-      County 
-    )
-  )
+  # # Cases per capita by county
+  # positiveRateName <- "counties-positive-cases-rate"
+  # chartDFs[[positiveRateName]] <- merge(
+  #   x = chartDFs[["county"]],
+  #   y = countyPops,
+  #   by = "County"
+  # )
   
-  # Cases per capita by county
-  positiveRateName <- "counties-positive-cases-rate"
-  chartDFs[[positiveRateName]] <- merge(
-    x = chartDFs[["county"]],
-    y = countyPops,
-    by = "County"
-  )
-  
-  chartDFs[[positiveRateName]]$`Confirmed cases per 100,000 people` <- chartDFs[[positiveRateName]]$`Confirmed cases` / chartDFs[[positiveRateName]]$`2019 population estimate` * 100000
+  # chartDFs[[positiveRateName]]$`Confirmed cases per 100,000 people` <- chartDFs[[positiveRateName]]$`Confirmed cases` / chartDFs[[positiveRateName]]$`2019 population estimate` * 100000
   
   # # Gender
   # chartDFs[["sex"]] <- func.SummCases(
@@ -199,81 +199,81 @@ if(args[4]==0){
   #   ) 
   # )
   
-  # Age group
-  positives$`Age group` <- ifelse(
-    test = positives$Age >= 80,
-    yes = "80 or older",
-    no = ifelse(
-      test = positives$Age >= 70,
-      yes = "70-79",
-      no = ifelse(
-        test = positives$Age >= 60,
-        yes = "60-69",
-        no = ifelse(
-          test = positives$Age >= 50,
-          yes = "50-59",
-          no = ifelse(
-            test = positives$Age >= 40,
-            yes = "40-49",
-            no = ifelse(
-              test = positives$Age >= 30,
-              yes = "30-39",
-              no = ifelse(
-                test = positives$Age >= 18,
-                yes = "18-29",
-                no = ifelse(
-                  test = positives$Age >= 0,
-                  yes = "17 or younger",
-                  no = "Unknown"
-                )
-              )
-            )
-          )
-        )
-      )
-    )
-  )
+  # # Age group
+  # positives$`Age group` <- ifelse(
+  #   test = positives$Age >= 80,
+  #   yes = "80 or older",
+  #   no = ifelse(
+  #     test = positives$Age >= 70,
+  #     yes = "70-79",
+  #     no = ifelse(
+  #       test = positives$Age >= 60,
+  #       yes = "60-69",
+  #       no = ifelse(
+  #         test = positives$Age >= 50,
+  #         yes = "50-59",
+  #         no = ifelse(
+  #           test = positives$Age >= 40,
+  #           yes = "40-49",
+  #           no = ifelse(
+  #             test = positives$Age >= 30,
+  #             yes = "30-39",
+  #             no = ifelse(
+  #               test = positives$Age >= 18,
+  #               yes = "18-29",
+  #               no = ifelse(
+  #                 test = positives$Age >= 0,
+  #                 yes = "17 or younger",
+  #                 no = "Unknown"
+  #               )
+  #             )
+  #           )
+  #         )
+  #       )
+  #     )
+  #   )
+  # )
+  # 
+  # casesByAge <- func.SummAgeRelatedDFs(positives)
+  # 
+  # hospByAge <- func.SummAgeRelatedDFs(
+  #   filter(
+  #     .data = positives,
+  #     grepl(
+  #       pattern = "yes",
+  #       x = Hospitalized,
+  #       ignore.case = T
+  #     )
+  #   )
+  # ) %>%
+  #   rename(c("Hospitalizations"="Confirmed cases"))
+  # 
+  # deathsbyAge <- func.SummAgeRelatedDFs(
+  #   filter(
+  #     .data = positives,
+  #     grepl(
+  #       pattern = "yes",
+  #       x = Died,
+  #       ignore.case = T
+  #     )
+  #   )
+  # ) %>%
+  #   rename(c("Deaths"="Confirmed cases"))
+  # 
+  # ag <- "age-group"
+  # chartDFs[[ag]] <- Reduce(function(x,y) merge(x,y,all=T,by="Age group"), list(casesByAge,hospByAge,deathsbyAge))
   
-  casesByAge <- func.SummAgeRelatedDFs(positives)
-
-  hospByAge <- func.SummAgeRelatedDFs(
-    filter(
-      .data = positives,
-      grepl(
-        pattern = "yes",
-        x = Hospitalized,
-        ignore.case = T
-      )
-    )
-  ) %>%
-    rename(c("Hospitalizations"="Confirmed cases"))
   
-  deathsbyAge <- func.SummAgeRelatedDFs(
-    filter(
-      .data = positives,
-      grepl(
-        pattern = "yes",
-        x = Died,
-        ignore.case = T
-      )
-    )
-  ) %>%
-    rename(c("Deaths"="Confirmed cases"))
-  
-  ag <- "age-group"
-  chartDFs[[ag]] <- Reduce(function(x,y) merge(x,y,all=T,by="Age group"), list(casesByAge,hospByAge,deathsbyAge))
-  
-  
-  # Median age of cases by case date
-  meda <- "median-age-by-case-date"
-  chartDFs[[meda]] <- group_by(
-    .data = positives,
-    caseDate
-  ) %>%
-    summarise(
-      `Median age` = median(Age, na.rm = T),
-      Cases = n()
-    )
+  # # Median age of cases by case date
+  # meda <- "median-age-by-case-date"
+  # chartDFs[[meda]] <- group_by(
+  #   .data = positives,
+  #   caseDate
+  # ) %>%
+  #   summarise(
+  #     `Median age` = median(Age, na.rm = T),
+  #     Cases = n()
+  #   )
   
   # # Travel related
   # chartDFs[["travel-related"]] <- func.SummCases(
@@ -284,47 +284,47 @@ if(args[4]==0){
   # )
   
   
-  # Current deaths, resident v non-resident
-  cd <- "current-deaths"
-  chartDFs[[cd]] <- filter(
-    .data = positives,
-    tolower(Died) == "yes"
-  ) %>%
-    group_by(
-      County,
-      Jurisdiction
-    ) %>%
-    summarise(
-      Deaths = n()
-    ) %>%
-    dcast(County ~ Jurisdiction) %>% 
-    rowwise() %>%
-    mutate(
-      Residents = sum(
-        `FL resident`,
-        `Not diagnosed/isolated in FL`,
-        na.rm = T
-      )
-    ) %>%
-    mutate(
-      Total = sum(
-        Residents,
-        `Non-FL resident`,
-        na.rm = T
-      )
-    ) %>%
-    rename(
-      `Non-residents` = `Non-FL resident`
-    )
-
-  chartDFs[[cd]] <- chartDFs[[cd]][, -which(names(chartDFs[[cd]]) %in% c("FL resident","Not diagnosed/isolated in FL"))] %>%
-    adorn_totals(
-      where = c("row"),
-      na.rm = T,
-      name = "Statewide"
-    )
-  
-  chartDFs[[cd]] <- chartDFs[[cd]][,c("County","Total","Residents","Non-residents")]
+  # # Current deaths, resident v non-resident
+  # cd <- "current-deaths"
+  # chartDFs[[cd]] <- filter(
+  #   .data = positives,
+  #   tolower(Died) == "yes"
+  # ) %>%
+  #   group_by(
+  #     County,
+  #     Jurisdiction
+  #   ) %>%
+  #   summarise(
+  #     Deaths = n()
+  #   ) %>%
+  #   dcast(County ~ Jurisdiction) %>% 
+  #   rowwise() %>%
+  #   mutate(
+  #     Residents = sum(
+  #       `FL resident`,
+  #       `Not diagnosed/isolated in FL`,
+  #       na.rm = T
+  #     )
+  #   ) %>%
+  #   mutate(
+  #     Total = sum(
+  #       Residents,
+  #       `Non-FL resident`,
+  #       na.rm = T
+  #     )
+  #   ) %>%
+  #   rename(
+  #     `Non-residents` = `Non-FL resident`
+  #   )
+  # 
+  # chartDFs[[cd]] <- chartDFs[[cd]][, -which(names(chartDFs[[cd]]) %in% c("FL resident","Not diagnosed/isolated in FL"))] %>%
+  #   adorn_totals(
+  #     where = c("row"),
+  #     na.rm = T,
+  #     name = "Statewide"
+  #   )
+  # 
+  # chartDFs[[cd]] <- chartDFs[[cd]][,c("County","Total","Residents","Non-residents")]
 }
 
 

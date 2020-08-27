@@ -1,30 +1,85 @@
+args <- commandArgs(trailingOnly=TRUE)
+
+options(scipen = 999)
+
+pkgs <- c(
+  "devtools",
+  "dplyr",
+  "forcats",
+  "reshape2",
+  "zoo",
+  "janitor"
+)
+
+for(x in pkgs){
+  if(!is.element(x, installed.packages()[,1])){
+    install.packages(x)
+  } else {
+    print(paste(x, " library already installed"))
+  }
+}
+
+library(dplyr)
+library(forcats)
+library(reshape2)
+library(zoo)
+library(janitor)
+
+
+func.SummCases <- function(gdf){
+  return(
+    gdf %>%
+      summarise(
+        `Confirmed cases` = n()
+      )
+  )
+}
+
+
+# countyPops <- read.csv(
+#   file = "source/2019-flbebr-county-pop-estimates.csv",
+#   check.names = F,
+#   stringsAsFactors = F
+# )
+
+positives <- read.csv(
+  file = args[1],
+  stringsAsFactors = F
+)
+
+positives$County <- ifelse(is.na(positives$County),"Unknown",positives$County)
+positives[positives$County=="Dade",]$County <- "Miami-Dade"
+positives[positives$County=="Desoto",]$County <- "DeSoto"
+
+positives$SouthFLCounties <- ifelse(
+  test = positives$County == "Miami-Dade" | positives$County == "Broward" | positives$County == "Palm Beach",
+  yes = positives$County,
+  no = "Rest of state"
+)
+
+# positives$caseDate <- as.Date(x = positives$Case1, format = "%m/%d/%Y")
+correctUnixTimePositiveCases <- (positives$Case1/1000)
+positives$caseDate <- format(
+  x = as.POSIXct(
+    x = correctUnixTimePositiveCases,
+    origin = "1970-01-01",
+    tz = "EST"
+  ),
+  "%Y-%m-%d"
+) 
+
+
 cByD <- "cases-by-date"
 sflC <- "south-fl-cumulative"
 dailyCounties <- "daily-fl-counties"
 sflVFL <- "cases-by-date-SouthFL"
 cnty <- "county"
-pr <- "counties-positive-cases-rate"
+# pr <- "counties-positive-cases-rate"
 ag <- "age-group"
 meda <- "median-age-by-case-date"
 cd <- "current-deaths"
 
-dfNames <- c(cByD,sflC,dailyCounties,sflVFL,cnty,pr,ag,meda,cd)
+dfNames <- c(cByD,sflC,dailyCounties,sflVFL,cnty,ag,meda,cd)
 
-for (i in 1:length(dfNames)) {
-  f <- paste0(args[1],dfNames[[i]],".csv")
-  fIn <- file.info(f)
-  editTime <- as.numeric(as.POSIXct(fIn$mtime))
-  
-  rawFiles <- list.files(args[[2]])
-  latestFile <- rawFiles[[length(rawFiles)]]
-  latestFileTimeString <- gsub(
-    pattern = "FL-|.csv",
-    replacement = '',
-    x = latestFile
-  )
-  latestFileTime <- as.numeric(as.POSIXct(latestFileTimeString,format="%Y-%m-%d_%H%M%S"))
-  
-  processedDatasetAlreadyMade <- editTime > latestFileTime
-  if(processedDatasetAlreadyMade) next
-  source(paste0(dfNames[[i]],".r"))
-}
+processedDataDir <- args[2]
+source("write-datawrapper-files-from-loop.r")
