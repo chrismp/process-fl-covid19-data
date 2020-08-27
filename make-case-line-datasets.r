@@ -66,17 +66,16 @@ positives$caseDate <- format(
     tz = "EST"
   ),
   "%Y-%m-%d"
-) 
+)
 
-
-dfNamesChartIDs <- list(
-  "county" = "Vdnj6",
-  "age-group" = "BSF3m",
-  "south-fl-cumulative" = "aof13",
-  "cases-by-date-SouthFL" = "eXjOw",
-  "cases-by-date" = "C7GGb",
-  "current-deaths" = "Kbjsq",
-  "median-age-by-case-date" = "hMtwa"
+dfNames <- c(
+  "county",
+  "age-group",
+  "south-fl-cumulative",
+  "cases-by-date-SouthFL",
+  "cases-by-date",
+  "current-deaths",
+  "median-age-by-case-date"
 )
 
 processedDataDir <- args[2]
