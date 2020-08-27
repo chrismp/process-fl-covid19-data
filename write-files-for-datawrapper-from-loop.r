@@ -16,7 +16,7 @@ for (i in 1:length(dfNames)) {
   processedDatasetAlreadyMade <- editTime > latestFileTime
   if(processedDatasetAlreadyMade) next
   
-  source(paste0(dfn,".r"))
+  source(paste0("processors/",dfn,".r"))
   
   write.csv(
     x = df,
