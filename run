@@ -24,5 +24,5 @@ echo "======"
 echo "Making CSVs related to coronavirus deaths."
 Rscript processors/deaths-by-date.r $p $od
 
-# echo "Making data files for Google Sheets for other reporters"
-# Rscript cases-reported-by-county-and-date.r $t $m
+echo "Making data files for Google Sheets for other reporters"
+Rscript cases-reported-by-county-and-date.r $t $m
