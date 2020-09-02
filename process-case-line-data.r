@@ -13,7 +13,7 @@ pkgs <- c(
 
 for(x in pkgs){
   if(!is.element(x, installed.packages()[,1])){
-    install.packages(x,process-case-line-data.r)
+    install.packages(x,repo="http://cran.rstudio.com/")
   } else {
     print(paste(x, " library already installed"))
   }
