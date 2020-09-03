@@ -11,8 +11,8 @@ for (i in 1:length(dfNames)) {
   )
   latestFileTime <- as.numeric(as.POSIXct(latestFileTimeString,format="%Y-%m-%d_%H%M%S"))
   
-  processedDatasetAlreadyMade <- editTime > latestFileTime
-  if(processedDatasetAlreadyMade) next
+  # processedDatasetAlreadyMade <- editTime > latestFileTime
+  # if(processedDatasetAlreadyMade) next
   
   print(paste0("Processing data for ",f))
   source(paste0("processors/",dfn,".r"))
