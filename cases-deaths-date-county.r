@@ -1,12 +1,3 @@
-library(stringr)
-library(dplyr)
-library(data.table)
-
-testFiles <- list.files(
-  path = "../output/raw/tests",
-  full.names = T
-)
-
 outdf <- data.frame(
   DateTime = character(),
   Date = character(),
@@ -123,9 +114,12 @@ outdf2$NewDeathsPalmBeach <- func.SubtractFromPrev(outdf2$Palm.Beach.deaths)
 outdf2$NewDeathsRestOfState <- func.SubtractFromPrev(outdf2$Deaths.in.rest.of.Florida)
 outdf2$NewDeathsFlorida <- func.SubtractFromPrev(outdf2$Florida.deaths)
 
+outFname <- paste0(args[2],"/cases-deaths-by-date-county.csv")
+print(paste0("Writing file: ",outFname))
+
 write.csv(
   x = outdf2,
-  file = paste0("cases-deaths-by-date-county.csv"),
+  file = outFname,
   na = '',
   row.names = F
 )

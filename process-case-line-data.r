@@ -75,12 +75,12 @@ positives$caseDate <- format(
 )
 
 dfNames <- c(
-  "county",
+  # "county",
   "age-group",
-  "south-fl-cumulative",
-  "cases-by-date-SouthFL",
-  "cases-by-date",
-  "current-deaths",
+  # "south-fl-cumulative",
+  # "cases-by-date-SouthFL",
+  # "cases-by-date",
+  # "current-deaths",
   "median-age-by-case-date"
 )
 

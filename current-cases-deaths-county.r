@@ -1,8 +1,3 @@
-testFiles <- list.files(
-  path = "../output/raw/tests",
-  full.names = T
-)
-
 latestFile <- testFiles[length(testFiles)]
 
 df <- read.csv(latestFile)
@@ -16,9 +11,12 @@ outdf <- df[c(
   "C_FLResDeaths"
 )]
 
+outFname <- paste0(args[2],"/current-cases-deaths-county.csv")
+print(paste0("Writing file: ",outFname))
+
 write.csv(
   x = outdf,
-  file = paste0("current-cases-deaths-county.csv"),
+  file = outFname,
   na = '',
   row.names = F
 )
