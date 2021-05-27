@@ -55,7 +55,7 @@ hospByAge <- func.SummAgeRelatedDFs(
     .data = positives,
     grepl(
       pattern = "yes",
-      x = Hospitalized,
+      x = Hospitaliz,
       ignore.case = T
     )
   )
